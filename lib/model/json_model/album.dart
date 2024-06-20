@@ -33,6 +33,9 @@ class Album {
   @JsonKey(name: "id")
   int? id;
 
+  @JsonKey(name: "date")
+  DateTime? date;
+
   @JsonKey(name: "title")
   String? title;
 
@@ -40,6 +43,7 @@ class Album {
     this.userId,
     this.id,
     this.title,
+    this.date,
   });
 
   factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
