@@ -32,7 +32,7 @@ class IncomeExpenditureModel extends UniteType{
     return {
       'id': id,
       'type': type,
-      'date': date?.toString(),
+      'date': date?.toUtc().toString(),
       'value': value,
       'remark': remark,
       'use_type': useType?.value,
@@ -48,7 +48,7 @@ class IncomeExpenditureModel extends UniteType{
     return IncomeExpenditureModel(
       id: (json['id'] as num?)?.toInt(),
       type: json['type'] as String?,
-      date: DateTime.parse(date),
+      date: DateTime.parse(date).toLocal(),
       value: (json['value'] as num?)?.toDouble(),
       remark: json['remark'] as String?,
       useType: UseType.values.firstWhere((element) => element.value == useType),

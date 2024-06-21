@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -181,7 +180,8 @@ class _ChildHomeState extends State<ChildHome> {
 
                         // BaseApi.closeDb();
                         // print(index);
-                        final data = await IncomeExpenditureLogic.queryHomeData();
+                        final data =
+                            await IncomeExpenditureLogic.queryHomeData();
                         print(data);
                       },
                       child: Text('get dg'),
@@ -197,37 +197,26 @@ class _ChildHomeState extends State<ChildHome> {
                 ),
               ),
             ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: SizedBox(
-              height: 300,
-              child: ElevatedButton(
-                onPressed: () async {
-                  final index = await IncomeExpenditureLogic.insertDb(
-                    IncomeExpenditureModel(
-                      type: 'out',
-                      useType: UseType.shop,
-                      date: DateTime.now(),
-                      // date: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - 1),
-                      remark: 'test',
-                      value: 11.23,
-                    )
-                  );
-
-                  _getData();
-                  // BaseApi.closeDb();
-                  // print(index);
-                  // final data = await IncomeExpenditureLogic.queryHomeData();
-                  // print(data);
-                },
-                child: Text('get dg'),
-              ),
-            ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final index =
+              await IncomeExpenditureLogic.insertDb(IncomeExpenditureModel(
+            type: 'out',
+            useType: UseType.shop,
+            date: DateTime.now(),
+            // date: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - 1),
+            remark: 'test',
+            value: 11.23,
+          ));
+
+          _getData();
+          // BaseApi.closeDb();
+          // print(index);
+          // final data = await IncomeExpenditureLogic.queryHomeData();
+          // print(data);
+        },
         shape: CircleBorder(),
         backgroundColor: theme.colorScheme.primary,
         child: Icon(Icons.add, color: theme.colorScheme.primaryFixed),
