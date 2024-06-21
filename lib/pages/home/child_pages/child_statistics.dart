@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:record/pages/home/modules/chart.dart';
+import 'package:record/sql/logic/income_expenditure_logic.dart';
 import 'package:record/sql/model/income_expenditure_model.dart';
+import 'package:record/sql/model/statistics_data_modal.dart';
 
-class ChildStatistics extends StatelessWidget {
+class ChildStatistics extends StatefulWidget {
+  @override
+  State<ChildStatistics> createState() => _ChildStatisticsState();
+}
+
+class _ChildStatisticsState extends State<ChildStatistics> {
+  var currentSelectYear = int.parse(DateFormat('yyyy').format(DateTime.now()));
+  StatisticsDataModal chartList = StatisticsDataModal(category: [], month: []);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getData(currentSelectYear);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final list = UseType.values;
 
     return DefaultTextStyle(
       // textAlign: TextAlign.left,
@@ -22,7 +39,7 @@ class ChildStatistics extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '2024年',
+                  '$currentSelectYear年',
                   style: theme.textTheme.labelLarge!.copyWith(
                     color: Colors.white,
                   ),
@@ -35,7 +52,7 @@ class ChildStatistics extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
-              child: Chart(),
+              child: Chart(list: chartList.month),
             ),
             SizedBox(height: 20),
             Row(
@@ -51,7 +68,7 @@ class ChildStatistics extends StatelessWidget {
             SizedBox(height: 10),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(16),
+                // padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -59,11 +76,84 @@ class ChildStatistics extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1.75,
                   child: ListView.builder(
-                    itemCount: list.length,
+                    itemCount: chartList.category.length,
                     itemBuilder: (context, index) {
-                      final item = list[index];
-                      return ListTile(
-                        title: Text(item.name),
+                      final item = chartList.category[index];
+
+                      return Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              (item.value as UseType).name,
+                              style: theme.textTheme.labelSmall!.copyWith(
+                                color: Colors.black87,
+                              ),
+                            ),
+                            Column(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      item.outTotal.toStringAsFixed(2),
+                                      style: TextStyle(
+                                        color: Color(0xFF2a9d8f),
+                                      ),
+                                    ),
+                                    Text(
+                                      ' 支出',
+                                      style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: theme.textTheme.labelMedium!
+                                                .fontSize! -
+                                            14,
+                                      ),
+                                    ),
+                                    Text(
+                                      '',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      item.inTotal.toStringAsFixed(2),
+                                      style: TextStyle(
+                                        color: Color(0xFFE80054),
+                                      ),
+                                    ),
+                                    Text(
+                                      ' 收入',
+                                      style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: theme.textTheme.labelMedium!
+                                                .fontSize! -
+                                            14,
+                                      ),
+                                    ),
+                                    Text(
+                                      '',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -75,5 +165,12 @@ class ChildStatistics extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _getData(int year) async {
+    final data = await IncomeExpenditureLogic.queryYearData(year);
+    setState(() {
+      chartList = data;
+    });
   }
 }

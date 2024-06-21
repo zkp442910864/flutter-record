@@ -166,26 +166,6 @@ class _ChildHomeState extends State<ChildHome> {
                 height: 300,
                 child: Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // final index = await IncomeExpenditure.insertDb(
-                        //   IncomeExpenditure(
-                        //     type: 'in',
-                        //     useType: UseType.household,
-                        //     date: DateTime.now(),
-                        //     remark: 'test',
-                        //     value: 11.22,
-                        //   )
-                        // );
-
-                        // BaseApi.closeDb();
-                        // print(index);
-                        final data =
-                            await IncomeExpenditureLogic.queryHomeData();
-                        print(data);
-                      },
-                      child: Text('get dg'),
-                    ),
                     Image.asset('assets/no_data_amico.png', width: 300),
                     Html(
                         data:

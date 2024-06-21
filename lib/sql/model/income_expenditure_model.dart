@@ -51,7 +51,7 @@ class IncomeExpenditureModel extends UniteType{
       date: DateTime.parse(date).toLocal(),
       value: (json['value'] as num?)?.toDouble(),
       remark: json['remark'] as String?,
-      useType: UseType.values.firstWhere((element) => element.value == useType),
+      useType: useType != null ? UseType.values.firstWhere((element) => element.value == useType) : null,
     );
   }
 
